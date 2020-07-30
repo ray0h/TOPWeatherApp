@@ -11,11 +11,15 @@ const config = () => {
       rules: [
         {
           test: /\.css$/, 
-          use: [ 
-            "style-loader",
-            "css-loader"
-          ]
-        }
+          use: ["style-loader", "css-loader"],
+        },
+        {
+          test: /\.js$/,
+          loader: "babel-loader",
+          query: {
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+          },
+        },
       ]
     }
   }
