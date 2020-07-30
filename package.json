@@ -1,0 +1,19 @@
+{
+  "name": "weatherapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "css-loader": "^4.1.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  }
+}
