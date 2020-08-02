@@ -2,4 +2,4 @@
 
 Weather App built using React, webpack, OpenWeather API 
 
-Focus on using promises, async/await
+Concepts focus: promises, async/await, API's

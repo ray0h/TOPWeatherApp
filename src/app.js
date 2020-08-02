@@ -1,14 +1,25 @@
 import React, { useState, useEffect  } from 'react';
+import Search from './components/Search';
 import Report from './components/Report';
+import LoadScreen from './components/LoadScreen';
 import "regenerator-runtime/runtime";
 
 const App = () => {
   const [ weather, setWeather ] = useState({});
   const [ city, setCity ] = useState("New York");
+  const [ currentCity, setCurrentCity] = useState("");
 
+  const weatherDataEmpty = Object.keys(weather).length === 0;
   const kelvinToFarenheit = (temp) => (temp - 273) * 9/5 + 32;
 
-  useEffect( () => {
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      setCity(e.target.value);
+      e.target.value = "";
+    }
+  };
+
+  useEffect(() => {
     async function getWeather() {
       try {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=88bbe9fba9c30c4f20e337dad0989f18`);
@@ -16,7 +27,7 @@ const App = () => {
 
         setWeather(
           {
-            name: res.name,
+            city: res.name,
             country: res.sys.country,
             main: res.weather[0].main,
             description: res.weather[0].description,
@@ -28,33 +39,50 @@ const App = () => {
             windspeed: Math.round(res.wind.speed*2.237),
             windDir: res.wind.deg,
             time: res.dt,
+            timeZone: res.timezone,
             sunrise: res.sys.sunrise,
             sunset: res.sys.sunset
           }
-        )
-        
+        );
       } catch (error) {
-          console.error(error);
+        setWeather({})
+        console.error(error);
       }
     }
-    getWeather();
+
+    // short timeout to emphasize (show off) loading screen
+    setTimeout(() => {
+      getWeather();
+      setCurrentCity(city);
+    }, 1500)
+
   }, [city]);
 
-  const handleEnter = (e) => {
-    if (e.key === "Enter") {
-      setCity(e.target.value);
-      e.target.value="";
-    }
-  }
-
-  return (
-    <div className="container">
-      <label>City: </label>
-      <input type="text" name="city" onKeyDown={handleEnter}/>
-      
+  // Error Message
+  if (weatherDataEmpty && currentCity === city) {
+    return (
+      <div className="container">
+        <Search handleFn={handleEnter}/>
+        <br/>
+        <h2>{`'${city}' - City Not Found`}</h2>
+      </div>
+    )
+  } else if (weatherDataEmpty || currentCity !== city) {
+    return (
+      <div className="container">
+        <Search handleFn={handleEnter}/> 
+        <LoadScreen/>
+      </div>
+    )
+  } else {
+    return (
+      <div className="container">
+      <Search handleFn={handleEnter}/>
       <Report weather={weather}/>
     </div>
-  )
-}
+    )
+  }
+  
+};
 
 export default App;
