@@ -1,6 +1,14 @@
 const path = require("path");
+const webpack = require("webpack");
+const dotenv = require("dotenv");
 
 const config = () => {
+  const env = dotenv.config().parsed;
+  const envKeys = Object.keys(env).reduce((prev,next) => {
+    prev[`process.env.${next}`] = JSON.stringify(env[next]);
+    return prev;
+  }, {})
+
   return {
     entry: "./src/index.js",
     output: {
@@ -23,6 +31,9 @@ const config = () => {
       ]
     },
     devtool: 'source-map',
+    plugins: [
+      new webpack.DefinePlugin(envKeys),
+    ],
   }
 }
 

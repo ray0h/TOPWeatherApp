@@ -22,7 +22,8 @@ const App = () => {
   useEffect(() => {
     async function getWeather() {
       try {
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=88bbe9fba9c30c4f20e337dad0989f18`);
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_key}`);
+        
         const res = await response.json();
 
         setWeather(
@@ -44,6 +45,7 @@ const App = () => {
             sunset: res.sys.sunset
           }
         );
+        
       } catch (error) {
         setWeather({})
         console.error(error);
